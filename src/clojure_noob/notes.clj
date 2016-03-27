@@ -1,6 +1,9 @@
-(:require src/clojure-noob/core.clj)
+(ns clojure-noob.notes
+  (:require clojure-noob.core)  
+  (:gen-class))
 
-(error-message :mild)
+
+
 (if true
   "By Agthar's hammer!"
   "nope")
@@ -100,8 +103,4 @@
  (hash-set 1 1 2 2)
  #{1 2})
 
-
-
-
-
- 
+(set [3 3 3 4 4])
