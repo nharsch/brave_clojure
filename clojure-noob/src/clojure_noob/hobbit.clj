@@ -27,6 +27,7 @@
   "return a map with left replaced with right"
   [part]
   {:name (clojure.string/replace (:name part) #"^left-" "right-")
+
   :size (:size part)})
 
 (defn symmetrize-body-parts
@@ -36,12 +37,36 @@
          final-body-parts []]
     (if (empty? remaining-asym-parts)
       final-body-parts
+      ; let binds names to values
       (let [[part & remaining] remaining-asym-parts]
         (recur remaining
                (into final-body-parts
                      (set [part (matching-part part)])))))))
 
 (symmetrize-body-parts asym-hobbit-body-parts)
+
+; let binds names to values
+(let [x 3] x)
+
+(def dalmation-list
+  ["Pongo" "Perdita" "Puppy 2" "Puppy 1"])
+
+; take grabs some number of elements from front of list
+(let [dalmatians (take 2 dalmation-list)]
+  dalmatians)
+
+; let creates a new namespace
+(def x 0)
+(< x (let [x 1] x))
+
+; however, withing the let statement, you can refer to existing 
+; ns
+(def x 0)
+(= 1 (let [x (inc x )] x))
+
+
+
+
 
 
 
