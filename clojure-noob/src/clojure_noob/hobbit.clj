@@ -33,7 +33,9 @@
 (defn symmetrize-body-parts
   "Expects a seq of maps that have a :name and :size"
   [asym-body-parts]
+  ; setup loop
   (loop, [remaining-asym-parts asym-body-parts
+         ; accumulator
          final-body-parts []]
     (if (empty? remaining-asym-parts)
       final-body-parts
@@ -55,11 +57,14 @@
 (let [dalmatians (take 2 dalmation-list)]
   dalmatians)
 
-; let creates a new namespace
+; **LET** creates a new namespace
 (def x 0)
 (< x (let [x 1] x))
 
-; however, withing the let statement, you can refer to existing 
+; you assign multiple values?
+(let [a 1 b 2 c 3] (list a b c))
+
+; however, withing the let statement, you can refer to existing
 ; ns
 (def x 0)
 (= 1 (let [x (inc x )] x))
