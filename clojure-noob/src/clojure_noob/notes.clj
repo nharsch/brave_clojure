@@ -299,3 +299,136 @@
 
 ((fn [inc num] ((inc-maker inc) num)) 2 3)
 
+
+; LOOPS
+
+; for loop
+; is a sequence operator
+(for [thing [1 2 3 4]]
+  (* thing thing))
+
+; like list comprehensions in python
+(for [w ["bethany" "sonya" "bene"] :when (> (count w) 5)]
+  w)
+
+; recur
+; tail recursion
+(defn some-join [coll result]
+  ; base case, return string of result + first of coll
+  (if (= 1 (count coll)) (str result (first coll))
+    ; call recursively with rest, string of result + first + ", "
+    (recur (rest coll) (str result (first coll) ", "))))
+
+(some-join ["hello" "world" "love" "coding"] "Words: ")
+
+; loop 
+; sets a recusion point. the recusrion point is designed to use recur
+; this looks just like an anonymous recursive function, like above, no?
+(loop [coll ["hello" "world" "love" "coding"] result "Words: "]
+  (if (= 1 (count coll)) (str result (first coll))
+      (recur (rest coll) (str result (first coll) ", "))))
+"Words: hello, world, love, coding"
+
+; Chapter 4
+
+(defn titleize
+  [topic]
+  (str topic " for the Brave and True"))
+
+
+(map titleize ["Hamsters" "Rangnarok"])
+; works on hashes
+(map titleize #{"Elbows" "Soap Carving"})
+; works on anything that first and rest work on
+
+; seq
+(= 
+  (seq '(1 2 3))
+  (seq [1 2 3]))
+; would be equal except hashes are unordere
+(seq #{1 2 3})
+; breaks it into [key value] 
+(seq {:name "Bill Compton" :occupation "Dead mopey guy"})
+
+(into {} '([:a 1] [:b 2] [:c 3]))
+(into {} [["some" "values"] ["are" "heterogeneous"]])
+
+; Map
+(map inc [1 2 3])
+(map str ["a" "b" "c"] ["A" "B" "C"])
+; works kida like this
+(list (str "a" "A") (str "b" "B"))
+
+(def human-consumption   [8.1 7.3 6.6 5.0])
+(def critter-consumption [0.0 0.2 0.3 1.1])
+(defn unify-diet-data
+  [human critter]
+  {:human human
+   :critter critter})
+
+; this is like python zip 
+(map unify-diet-data 
+     human-consumption 
+     critter-consumption)
+; => ({:human 8.1, :critter 0.0}
+;; {:human 7.3, :critter 0.2}
+;; {:human 6.6, :critter 0.3}
+;; {:human 5.0, :critter 1.8})
+
+; map can take a collection of functions
+(def sum #(reduce + %))
+(def avg #(/ (sum %) (count %)))
+(defn stats
+  [numbers]
+  ; woah
+  (map #(% numbers) [sum count avg]))
+(stats [3 4 10])
+(stats [80 1 44 13 6])
+
+; map key lookups to map data structures
+(def idenitites
+  [{:alias "Batman" :real "Bruce Wayne"}
+   {:alias "Spider-Man" :real "Peter Parker"}
+   {:alias "Santa" :real "Your mom"}
+   {:alias "Easter Bunny" :real "Your dad"}])
+; because, remember, keys are functions
+(map :real idenitites)
+
+; reduce
+(reduce (fn [new-map [key val]]
+          (assoc new-map key (inc val)))
+        {}
+        ; reduce treats this map
+        ; as a sequence of vectors
+        {:max 30 :min 10})
+
+; build up with k,v args
+; kind of like update
+(assoc (assoc {} :max (inc 30))
+        :min (inc 10))
+(get (assoc {} "key" "value") "key")
+
+; "overwrite" existing values
+(assoc {:key "old value"} :key "new value")
+
+; can use reduce to filter keys from a map based
+; on a value
+(reduce (fn [new-map [key val]]
+          (if (> val 4)
+            (assoc new-map key val)
+            new-map))
+        {}
+        {:human 4.1
+         :critter 3.9})
+
+; implement map with reduce
+(defn mymap
+  "implements map with reduce"
+  [fun sq]
+  (reduce (fn [new-seq val]
+            (conj new-seq (fun val)))
+          []
+          sq))
+(mymap inc [1 2 3 4])
+
+

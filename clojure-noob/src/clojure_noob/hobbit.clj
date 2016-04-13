@@ -25,7 +25,7 @@
 
 (defn matching-part
   "return a map with left replaced with right"
-  [part]
+  [part]                                    ;#"" means regex
   {:name (clojure.string/replace (:name part) #"^left-" "right-")
 
   :size (:size part)})
@@ -34,16 +34,22 @@
   "Expects a seq of maps that have a :name and :size"
   [asym-body-parts]
   ; setup loop
+  ; loop is like an anonymous funciton, where recur calls itself
   (loop, [remaining-asym-parts asym-body-parts
-         ; accumulator
-         final-body-parts []]
+    ; accumulator
+    final-body-parts []]
     (if (empty? remaining-asym-parts)
+      ; base case
       final-body-parts
       ; let binds names to values
+      ; in this case, pat is car, remaining is cdr of remaining-asym-parts
       (let [[part & remaining] remaining-asym-parts]
+        ; call loop again, with remaining as r-asym
         (recur remaining
-               (into final-body-parts
-                     (set [part (matching-part part)])))))))
+          ; place this into vector
+          (into final-body-parts
+            ; a set of part and result of matching-part of part
+            (set [part (matching-part part)])))))))
 
 (symmetrize-body-parts asym-hobbit-body-parts)
 
@@ -69,7 +75,27 @@
 (def x 0)
 (= 1 (let [x (inc x )] x))
 
+; ok, we can do this better with reduce
+(defn better-symmetrize-body-parts
+  "Expects a seq of maps that have a :name and :size"
+  [asym-body-parts]
+              ; acc name        ;item
+  (reduce (fn [final-body-parts part]
+            ; put into acc          ;set of part and matching part
+            (into final-body-parts (set [part (matching-part part)])))
+          []
+          asym-body-parts))
 
+(defn hit
+  [asym-body-parts]
+  (let [sym-parts (better-symmetrize-body-parts asym-body-parts)
+        body-part-size-sum (reduce + (map :size sym-parts))
+        target (rand body-part-size-sum)]
+      (loop [[part & remaining] sym-parts
+             accumulated-size (:size part)]
+        (if (> accumulated-size target)
+          part
+          (recur remaining (+ acculmulated-size (:size (first remaining))))))))
 
 
 
