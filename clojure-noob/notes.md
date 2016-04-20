@@ -54,3 +54,52 @@ second collection will be passes as the second argument, and so on.
 ## Reduce
 reduce processes each element in a sequence to build a result
 
+## Take-While, Drop-While, Reduce
+(Take-while filter-fun seq) => (seq where filter-fun true)
+
+(Drop-while filter-fun seq) => (seq where filter-fun false)
+
+(filter filter-fun seq) => (seq where filter-fun is true)
+
+Take-while my be more efficient that filter in some cases, like when 
+the sequence is in order, although I'm not sure why because how do it know
+a sequence is in order?
+
+## Lazy Sequences
+`map` firsts calls `seq` on a collection
+
+`map` and `filter` return lazy sequences. Lazy sequences' values
+ aren't computed until you try to access them.
+
+If `map` wasn't lazy, it would evaulate predicate function on every
+value in sequence. This makes chaining filters slower than necessary
+
+For example: say we want to find all brown foxes from a sequence like this:
+
+    (def animals [{:species "not-fox" :coloring "green"}...])
+
+We'd want something like:
+    (take-while #(= (:species %) "fox")
+        (take-while #(= (:coloring %) brown) animals)) 
+
+We don't want to first firlter all animals on color, then all brown animals 
+by species. We'd rather lazily check both predicates on every item. Of course 
+the above example could be rewitting with both params in one predicate function.
+
+Very much like generators.
+
+This will be useful in data pipelining.
+
+You can think of a lazy seq as consisting of two parts: a recipe for how to realize the elements of a sequence and the elements that have been realized so far. 
+
+## Collections
+
+Like sequences
+
+Sequences are about operating on individual members, 
+Collections are about the data structure as a whole.
+For example: **empty? count, every?**
+
+## Apply and Partial
+
+

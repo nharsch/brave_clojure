@@ -431,4 +431,160 @@
           sq))
 (mymap inc [1 2 3 4])
 
+(= (take 5 [1 2 3 4 5 6])
+    (1 2 3 4 5 ))
+;interesting, lists are equal to vectors
+(= '(1 2) [1 2])
+(= '() [])
+
+(= (drop 5 [1 2 3 4 5 6])
+    ; remember that drop returns a list
+    '(6))
+
+; take while filters against function
+(= (take-while #(< % 3) [1 2 3])
+    '(1 2))
+
+(= (drop-while #(< % 3) [1 2 3])
+    '(3))
+
+; which is nice on maps
+(def journal [{:month 1} {:month 2} {:month 3}])
+(take-while #(< (:month %) 3) journal)
+(drop-while #(< (:month %) 3) journal)
+; chain them
+(take-while #(< (:month %) 3) 
+    (drop-while #(< (:month %) 2) 
+        journal))
+
+(filter #(> (:month %) 1) journal)
+
+; some is like any, it will find the first true
+; item in a seq
+(some #(> (:month %) 1) journal)
+; expect returns nil not False, which make sense
+; if you thing of the sequence as infinite
+(some #(> (:month %) 5) journal)
+; here's how you return the first value with some
+(some #(and (> (:month %) 1) %) journal)
+
+; sort is ascending
+(sort [4 2 6 1])
+; sort by gives you an option
+(sort-by count ["aaa" "c" "bb"])
+; so this is how to do descending
+(sort-by - [2 8 3])
+
+; concat appends members of one seq to another
+(= '(1 2 3 4) (concat [1 2] [3 4]))
+
+; infinite sequences
+
+(concat (take 8 (repeat "na")) ["Batman!"])
+
+(take 3 (repeatedly (fn [] (rand-int 10))))
+
+; Collection Abstraction
+; similiar to sequence
+
+(empty? [])
+(empty? ["no!"])
+
+; INTO
+(map identity {:sunlight-reaction "Glitter!" :sesame "no"})
+; returns vectors
+
+(into {} (map identity {:sunlight-reaction "Glitter!"}))
+; places vector into map
+
+(map identity [:garlic :sesame-oil :fried-eggs])
+
+(into [] (map identity [:garlic :sesame-oil :fried-eggs]))
+
+(map identity [:garlic-clove :garlic-clove])
+
+(into #{} (map identity [:garlic-clove :garlic-clove]))
+; maps into map
+
+(into {:favorite-emotion "gloomy"} [[:sunlight-reaction "Glitter!"]])
+; you can INTO non empty colls
+
+(into ["cherry"] '("pine" "spruce"))
+
+; conj
+(conj [0] [1])
+; [0 [1]]
+
+; INTO's second arg must be coll
+(into [0] [1])
+; [0 1]
+
+(conj [0] 1)
+; [0 1]
+
+(conj [0] 1 2 3 4)
+; [0 1 2 3 4]
+
+(conj {:time "midnight"} [:place "ye olde cemetarium"])
+
+; we could define conj with into
+(defn my-conj
+  [target & additions]
+  ; additions at this step is vector 
+  (into target additions))
+
+; apply explodes a sequable data structure so
+; it can be passed to a function that expects
+; a rest parameter
+
+(= [1 2 3] (max [1 2 3]))
+(= 3 (apply max [1 2 3]))
+
+; we can use this to build into with conj
+
+(defn my-into
+  [target additions]
+  (apply conj target additions))
+
+(my-into [0] [1 2 3])
+
+; partial
+
+(def add10 (partial + 10))
+(= 13 (add10 3))
+
+(def add-missing-elements
+  (partial conj ["water" "earth" "air"]))
+(add-missing-elements "aluminium")
+(add-missing-elements "carbon")
+
+(defn my-partial
+  [partialized-fn & args]
+  (fn [& more-args]
+    ; explode the args
+    (apply partialized-fn (into args more-args))))
+
+;using partial for a logger
+(defn lousy-logger
+  [log-level message]
+  (condp = log-level
+    :warn (clojure.string/lower-case message)
+    :emergency (clojure.string/upper-case message)))
+
+(def warn (partial lousy-logger :warn))
+
+(warn "RED LIGHT AHEAD")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
