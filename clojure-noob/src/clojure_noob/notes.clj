@@ -389,13 +389,13 @@
   ([words]
    (reduce str words))
   ([sep words]
-   (reduce (fn [a b] (str a sep b)) words))
+   (reduce #(str %1 sep %2) words))
 )
 
 (join '("foo" "bar"))
 (join " " '("foo" "bar" "baz" "whatever"))
 
-(map space_join ["Nigel" "Bethany"] ["James" "Anne"] ["Harsch" "Weise"])
+
 
 (def human-consumption   [8.1 7.3 6.6 5.0])
 (def critter-consumption [0.0 0.2 0.3 1.1])
