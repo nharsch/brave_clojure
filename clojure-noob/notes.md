@@ -1,3 +1,14 @@
+# Environment/Toolchain
+
+- `vim` for editing
+- `fireplace-vim` to connect to repl
+   - `:Connect` if not connected
+   - `cpp` to evaluate form
+   - `:%Eval ` to evaluate whole file
+- `lein repl` for repl, open in another window
+
+
+
 # Chapter 1
 
 `lein new app <appname>` creates project
@@ -36,20 +47,42 @@ Characterized as a sequence operator
 
 # Chapter 4
 
+Programming to abstractions - allows use of map function
+over different data types
+
+Abstractions a names collection of operations
+
+sequence or `seq` abstraction
+
+if `first`, `rest`, and `cons` work on it, it's a `seq`
+
+
+
 **indirection** is a generic term for the mechanisms
 a language so that one name can have multiple, related 
 meanings. `first` has multiple, data structure-specific meanings.
 
 function **polymorphism** is one way that Clojure provides indirection.
 
-Clojure sequence function use `seq` on their args
+`seq` function returns list
+
+`seq` on hashes returns list of key/val vectors
+
+`([:occupation "Dead mopey guy"] [:name "Bill Compton"])'
 
 ## Map
 
 When you pass `map` to multiple collections, the elements
 of the first collection will be passes as the first
-argument of the mapping function, the elements of the 
+argument of the mapping function, the elements of the
 second collection will be passes as the second argument, and so on.
+
+you can give map mutliple collections
+
+```
+(map str ["a" "b" "c"] ["A" "B" "C"])
+; => ("aA" "bB" "cC")
+```
 
 ## Reduce
 reduce processes each element in a sequence to build a result

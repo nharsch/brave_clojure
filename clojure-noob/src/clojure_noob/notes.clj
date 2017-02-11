@@ -330,11 +330,11 @@
 "Words: hello, world, love, coding"
 
 ; Chapter 4
+;_________________________________________________
 
 (defn titleize
   [topic]
   (str topic " for the Brave and True"))
-
 
 (map titleize ["Hamsters" "Rangnarok"])
 ; works on hashes
@@ -342,10 +342,12 @@
 ; works on anything that first and rest work on
 
 ; seq
-(= 
+(=
   (seq '(1 2 3))
-  (seq [1 2 3]))
-; would be equal except hashes are unordere
+  (seq [1 2 3])
+  '(1 2 3)) ; all return the same list
+
+; would be equal except hashes are unordered
 (seq #{1 2 3})
 ; breaks it into [key value] 
 (seq {:name "Bill Compton" :occupation "Dead mopey guy"})
@@ -355,9 +357,45 @@
 
 ; Map
 (map inc [1 2 3])
+; => (2 3 4)
+
 (map str ["a" "b" "c"] ["A" "B" "C"])
+; => ("aA" "bB" "cC")
 ; works kida like this
 (list (str "a" "A") (str "b" "B"))
+
+(str "hello" " ")
+(str ["hello"])
+
+; RABBIT HOLE alert:
+; making a join function took longer than I thought
+(defn space_join
+  ([] "")
+  ([string] string)
+  ([stringA stringB] (str stringA " " stringB))
+  ([stringA stringB & more]
+   (reduce
+     space_join
+     (space_join stringA stringB)
+     more)
+   )
+)
+(space_join "works")
+(space_join "it" "works?")
+(space_join "Does" "This" "Work")
+
+; of cource, this is way eaiser
+(defn join
+  ([words]
+   (reduce str words))
+  ([sep words]
+   (reduce (fn [a b] (str a sep b)) words))
+)
+
+(join '("foo" "bar"))
+(join " " '("foo" "bar" "baz" "whatever"))
+
+(map space_join ["Nigel" "Bethany"] ["James" "Anne"] ["Harsch" "Weise"])
 
 (def human-consumption   [8.1 7.3 6.6 5.0])
 (def critter-consumption [0.0 0.2 0.3 1.1])
@@ -366,9 +404,9 @@
   {:human human
    :critter critter})
 
-; this is like python zip 
-(map unify-diet-data 
-     human-consumption 
+; this is like python zip
+(map unify-diet-data  ; unify-diet-data will accept has 2 arity
+     human-consumption
      critter-consumption)
 ; => ({:human 8.1, :critter 0.0}
 ;; {:human 7.3, :critter 0.2}
@@ -478,11 +516,39 @@
 ; concat appends members of one seq to another
 (= '(1 2 3 4) (concat [1 2] [3 4]))
 
-; infinite sequences
+; lazy sequences
+(def vampire-database
+  {0 {:makes-blood-puns? false :has-pulse? true :name "McFishwhich"}
+   1 {:makes-blood-puns? false :has-pulse? true :name "McMackson"}
+   2 {:makes-blood-puns? true :has-pulse? false :name "Damon"}
+   3 {:makes-blood-puns? true :has-pulse? true :name "Mickey Mouse"}})
 
+(defn vampire-related-details
+  [social-security-number]
+  (Thread/sleep 1000)
+  (get vampire-database social-security-number))
+
+(vampire-related-details 0)
+
+(defn vampire?
+  [record]
+  (and (:makes-blood-puns? record)
+       (not (:has-pulse? record))
+       record))
+
+(defn identify-vampire
+  [social-security-numbers]
+  (first (filter vampire?
+           (map vampire-related-details social-security-numbers))))
+
+(identify-vampire [0 2 3])
+ 
+
+; infinite sequences
 (concat (take 8 (repeat "na")) ["Batman!"])
 
 (take 3 (repeatedly (fn [] (rand-int 10))))
+
 
 ; Collection Abstraction
 ; similiar to sequence
@@ -575,16 +641,9 @@
 
 (warn "RED LIGHT AHEAD")
 
+; complement
 
-
-
-
-
-
-
-
-
-
-
-
-
+(defn identify-humans
+  [social-security-numbers]
+  (filter #(not (vampire? %))
+    (map vampire-related-details social-security-numbers)))
