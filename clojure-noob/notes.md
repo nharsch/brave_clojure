@@ -84,6 +84,8 @@ you can give map mutliple collections
 ; => ("aA" "bB" "cC")
 ```
 
+
+
 ## Reduce
 reduce processes each element in a sequence to build a result
 

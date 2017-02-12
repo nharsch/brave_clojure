@@ -419,7 +419,11 @@
 (defn stats
   [numbers]
   ; woah
-  (map #(% numbers) [sum count avg]))
+  (map #(% numbers) [sum count avg])) 
+; reverse of usual map, instead of maping one function over a collection
+; we map a higher order fn with collection in place over seq of funcs
+; head explosion
+
 (stats [3 4 10])
 (stats [80 1 44 13 6])
 
@@ -434,12 +438,15 @@
 
 ; reduce
 (reduce (fn [new-map [key val]]
+          ; increment value and build new map
           (assoc new-map key (inc val)))
         {}
         ; reduce treats this map
         ; as a sequence of vectors
         {:max 30 :min 10})
 
+(assoc [:foo] 0 :does)
+(assoc '(:foo) 0 :bar)
 ; build up with k,v args
 ; kind of like update
 (assoc (assoc {} :max (inc 30))
