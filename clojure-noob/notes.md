@@ -135,6 +135,19 @@ Sequences are about operating on individual members,
 Collections are about the data structure as a whole.
 For example: **empty? count, every?**
 
+### Into
+since seq functions return a seq, use `into` to put
+that seq into desired collection data structure
+
+`(into {} (map identity {:sunlight-reaction "Glitter!"}))`
+
+`into` operates on 2 data structures
+
+### Conj
+`conj` adds elements to a collection
+
+`(conj [])`
+
 ## Apply and Partial
 
 

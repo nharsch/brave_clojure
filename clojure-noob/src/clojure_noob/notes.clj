@@ -43,6 +43,7 @@
 (=
   (get {:a 0 :b 1} :n)
   nil)
+
 (=
   (get {:a 0 :b 1} :n 3)
   3)
@@ -393,7 +394,7 @@
 )
 
 (join '("foo" "bar"))
-(join " " '("foo" "bar" "baz" "whatever"))
+(join " " '("foo" "bar" "whatever"))
 
 
 
@@ -445,8 +446,13 @@
         ; as a sequence of vectors
         {:max 30 :min 10})
 
-(assoc [:foo] 0 :does)
-(assoc '(:foo) 0 :bar)
+; assoc takes 3 args map, key val
+; like update in python
+
+(assoc [:foo] 0 :does) ; can update vectors
+(assoc {:foo "fu"} :bar "barb") ; adds k/v 
+(assoc {:foo "fu"} :foo "baz") ; returns updated val
+
 ; build up with k,v args
 ; kind of like update
 (assoc (assoc {} :max (inc 30))
@@ -470,10 +476,11 @@
 (defn mymap
   "implements map with reduce"
   [fun sq]
-  (reduce (fn [new-seq val]
-            (conj new-seq (fun val)))
-          []
-          sq))
+  (reduce
+    (fn [new-seq val] (conj new-seq (fun val)))
+    []
+    sq))
+
 (mymap inc [1 2 3 4])
 
 (= (take 5 [1 2 3 4 5 6])
@@ -515,7 +522,7 @@
 
 ; sort is ascending
 (sort [4 2 6 1])
-; sort by gives you an option
+; sort by gives you an sort fn option
 (sort-by count ["aaa" "c" "bb"])
 ; so this is how to do descending
 (sort-by - [2 8 3])
@@ -556,7 +563,12 @@
 
 (take 3 (repeatedly (fn [] (rand-int 10))))
 
+(defn even-numbers
+  ([] (even-numbers 0))
+  ([n] (cons n (lazy-seq (even-numbers (+ n 2))))))
 
+(take 10 (even-numbers))
+(take 2 (even-numbers 1))
 ; Collection Abstraction
 ; similiar to sequence
 
@@ -591,6 +603,7 @@
 ; INTO's second arg must be coll
 (into [0] [1])
 ; [0 1]
+;; (into [0] 1) => ERROR
 
 (conj [0] 1)
 ; [0 1]
@@ -645,8 +658,9 @@
     :emergency (clojure.string/upper-case message)))
 
 (def warn (partial lousy-logger :warn))
-
-(warn "RED LIGHT AHEAD")
+(def emergency (partial lousy-logger :emergency))
+(warn "Red Light Ahead")
+(emergency "Red Light Ahead")
 
 ; complement
 
@@ -654,3 +668,6 @@
   [social-security-numbers]
   (filter #(not (vampire? %))
     (map vampire-related-details social-security-numbers)))
+
+; complement is the opposite of a bool function
+((complement empty?) [])
