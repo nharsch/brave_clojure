@@ -671,3 +671,32 @@
 
 ; complement is the opposite of a bool function
 ((complement empty?) [])
+
+; Chapter 5
+
+(defn sum
+  ([vals] (sum vals 0)) ;set 0 as def accumulating-total arg
+  ([vals accumulating-total]
+    (if (empty? vals)
+      accumulating-total
+      (sum (rest vals) (+ (first vals) accumulating-total)))))
+(assert (= 42 (sum [40 1 1])))
+
+; even better with `recur`
+(defn sum
+  ([vals] (sum vals 0))
+  ([vals accumulating-total]
+   (if (empty? vals)
+     accumulating-total
+     (recur (rest vals) (+ (first vals) accumulating-total)))))
+(assert (= 42 (sum [40 1 1])))
+
+(require '[clojure.string :as s])
+(defn clean
+  [text]
+  (s/replace (s/trim text) #"lol" "LOL"))
+(clean "My boa constrictor is so sassy lol! ")
+
+((comp inc *) 2 2)
+
+(defn my-comp "#TODO")

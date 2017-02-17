@@ -150,4 +150,21 @@ that seq into desired collection data structure
 
 ## Apply and Partial
 
+# Chapter 5
+
+## Pure Functions
+
+always return the same result if given the same args. Called **referential transparency**
+
+andy funtion with `rand` is not
+
+any io bound functions not referentially transparent, as outside state can change
+
+Pure functions have non side effects
+
+## Memoization
+can be used to store the results of a pure function applied to args so
+that calling the fn on the same args returns the value without
+further computation
+
 
