@@ -699,4 +699,3 @@
 
 ((comp inc *) 2 2)
 
-(defn my-comp "#TODO")
