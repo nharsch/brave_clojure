@@ -84,6 +84,123 @@
             initial-board
             (range 1 (inc max-pos)))))
 
-(new-board 3)
+(def test-board (new-board 5))
 
 ;TODO moving pegs
+
+(defn pegged?
+  "Does the position have a paeg in it?"
+  [board pos]
+  (get-in board [pos :pegged]))
+(assert (pegged? test-board 2))
+
+(defn remove-peg
+  "Take the peg at the given position"
+  [board pos]
+  (assoc-in board [pos :pegged] false))
+(assert (false? 
+    (get-in
+      (remove-peg test-board 1)
+      [1 :pegged])))
+
+(defn place-peg
+  "Put a peg in the board at a given position"
+  [board pos]
+  (assoc-in board [pos :pegged] true))
+(assert (get-in 
+         (place-peg (remove-peg test-board 1) 1)
+         [1 :pegged]))
+
+(defn move-peg
+  "Take peg out of p1 and place it in p2"
+  [board p1 p2]
+  (place-peg (remove-peg board p1) p2))
+
+(defn valid-moves
+  "Return a map of all valid moves for pos, where the key is the
+  destination and the value is the jumped position"
+  [board pos]
+  (into {}
+        (filter (fn [[destination jumped]]
+                  (and (not (pegged? board destination))
+                       (pegged? board jumped)))
+                (get-in board [pos :connections]))))
+(def my-board (assoc-in (new-board 5) [4 :pegged] false))
+
+(valid-moves my-board 1)
+
+(defn valid-move?
+  "Return jumped position if the move from p1 to p2 is 
+  valid, nil otherwise"
+  [board p1 p2]
+  (get (valid-moves board p1) p2))
+(valid-move? my-board 8 4)
+(valid-move? my-board 1 4) ;returns jumped pos if true
+
+(defn make-move
+  "Move peg from p1 to p2, removing jumped peg"
+  [board p1 p2]
+  (if-let [jumped (valid-move? board p1 p2)]
+    (move-peg (remove-peg board jumped) p1 p2)))
+
+(defn can-move?
+  "Do any of the pegged positions have valid moves?"
+  [board]
+  (some (comp not-empty (partial valid-moves board))
+        (map first (filter #(get (second %) :pegged) board))))
+
+(def alpha-start 97)
+(def alpha-end 123)
+(def letters (map (comp str char) (range alpha-start alpha-end)))
+(def pos-chars 3)
+
+(def ansi-styles
+  {:red  "[31m"
+   :green "[32m"
+   :blue  "[34m"
+   :reset "[0m"})
+
+(defn ansi
+  "Produce a string which will apply an ANSI style"
+  [style]
+  (str \u001b (style ansi-styles)))
+
+(defn colorize
+  "Apply ANSI color to text"
+  [text color]
+  (str (ansi color) text (ansi :reset)))
+
+(defn render-pos
+  [board pos]
+  (str (nth letters (dec pos)) ;alpha
+       (if (get-in board [pos :pegged]) ;pegged
+         (colorize "0" :blue)
+         (colorize "-" :red))))
+
+(defn row-positions
+  "Return all positions in the given row"
+  [row-num]
+  (range (inc (or (row-tri (dec row-num)) 0))
+         (inc (row-tri row-num))))
+
+(defn row-padding
+  "String of spaces to add to the beginning of a row to center"
+  [row-num rows]
+  (let [pad-length (/ (* (- rows row-num) pos-chars) 2)]
+      (apply str (take pad-length (repeat " ")))))
+
+(defn render-row
+  [board row-num]
+  (str (row-padding row-num (:rows board))
+       (clojure.string/join " " (map (partial render-pos board)
+                                     (row-positions row-num)))))
+
+(defn print-board
+  [board]
+  (doseq [row-num (range 1 (inc (:rows board)))]
+    (println (render-row board row-num))))
+
+(print-board my-board)
+(doseq [foo [2 3]] (println foo))
+
+;TODO: player interaction
