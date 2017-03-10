@@ -232,6 +232,12 @@
                  (user-entered-valid-move new-board)
                  (user-entered-invalid-move board))))
 
+(defn user-entered-valid-move
+  "Handles the next step after a user has entered a valid move"
+  [board]
+  (if (can-move? board)
+    (prompt-move board)
+    (game-over board)))
 
 (defn user-entered-invalid-move
     "Handles the next stip after a user has entered an invalid move"
