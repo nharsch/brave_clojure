@@ -2,6 +2,8 @@
   (require [clojure.set :as set])
   (:gen-class)) ;; means we can use in command line
 
+(declare successful-move prompt-move game-over prompt-rows)
+
 (defn tri*
   "Generates laxy sequence of triangular numbers"
   ([] (tri* 0 1))
@@ -98,6 +100,7 @@
   "Take the peg at the given position"
   [board pos]
   (assoc-in board [pos :pegged] false))
+
 (assert (false? 
     (get-in
       (remove-peg test-board 1)
@@ -273,6 +276,8 @@
               board (new-board rows)]
             (prompt-empty-peg board)))
 
-;; (defn -main
-;;     []
-;;     (prompt-rows))
+(prompt-rows)
+
+(defn -main
+    []
+    (prompt-rows))
