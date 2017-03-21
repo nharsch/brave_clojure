@@ -168,3 +168,36 @@ that calling the fn on the same args returns the value without
 further computation
 
 
+# Chapter 6
+
+## Namespaces
+
+namespaces used for organizing code
+
+namespaces are objects of type `clojure.lang.Namespace`, and are a data structure
+
+refer to current namespace with `*ns*`, get its name with `(ns-name *ns*)`
+
+`(def var value)` _interns_ the var. Find a namespaces map of symbols-to-interned-vars
+using `ns-interns`
+
+`(create-ns)` takes a symbol, creates a namespace with that name, returns is
+
+`(in-ns)` creates namespace and switches repl to it
+
+use **fully qualified symbol** to reference symbols in other namespaces
+
+### refer
+
+refer updates current namespace symbol map with symbols of another
+
+`(clojure.core/refer 'proj.test)`
+
+you can now use symbols from 'proj.test' without fully qualified names
+
+you can also give `refer` optional filters `:only`, `:exclude` and `:rename`
+
+(clojure.core/refer 'cheese.taxonomy :only ['bries])
+
+
+

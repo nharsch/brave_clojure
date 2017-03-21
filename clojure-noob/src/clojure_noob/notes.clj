@@ -699,3 +699,10 @@
 
 ((comp inc *) 2 2)
 
+; Chapter 6
+(def test-var "value")
+(ns-interns *ns*)
+(deref #'clojure-noob.notes/test-var) ; same use `test-var`
+
+
+
