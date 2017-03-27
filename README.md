@@ -199,5 +199,69 @@ you can also give `refer` optional filters `:only`, `:exclude` and `:rename`
 
 (clojure.core/refer 'cheese.taxonomy :only ['bries])
 
+# Chapter 7
 
+## Read and Eval
+
+Lisps have 2 phase evaluation model: `read` and `eval`
+
+read: text -> AST
+eval: AST is evaluated
+
+`eval` will evaluate a list of symbols
+
+`(eval (list (+ 1 3))) ;=>3`
+
+'read-string` will convert string into data structure
+
+`(read-string "(+ 1 2)") ; => (+ 1 2)`
+
+## Reader Macros
+
+when read, macros such as the anonymous function macro:
+
+`#(+ 1 %)`
+
+are expanded into data structres:
+
+`(fn* [p1__1321#] (+ 1 p1__1321#))`
+
+## The Evaluator
+
+Evaluator is a function that accepts data structure as an
+argument, processes the data structure according
+to the data structure's type, and returns a result
+
+Whenever Clojure evaluates data structures that aren’t a list or symbol, 
+the result is the data structure itself
+
+### Symbols
+
+clojure will evaluate symbols by:
+
+1. Looking up whether the symbol is a special form
+2. look up if the symbol corresponds to a local binding
+3. tries to find namespace mapping
+4. throws an exception
+
+at read time symbols are data structures, not the functions they might
+represent
+
+The quote special form tells the evaluator, “Instead of evaluating my next 
+data structure like normal, just return the data structure itself.” 
+
+### `defmacro`
+
+```
+(defmacro infix-eval
+    [call-list]
+    (list (second call-list) (first call-list) (last call-list)))
+```
+
+### `macroexpand`
+
+```
+(macroexpand '(infix-eval (1 + 1)))
+(+ 1 1)
+```
 
