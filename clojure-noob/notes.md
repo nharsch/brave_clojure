@@ -200,4 +200,36 @@ you can also give `refer` optional filters `:only`, `:exclude` and `:rename`
 (clojure.core/refer 'cheese.taxonomy :only ['bries])
 
 
+# Chapter 8
+
+`when` is not a special form, but a macro defined with `if` and `do`
+
+functions v macros: function args are first fully evaluated
+
+multi-arity macros: `and` and `or` are defined as macros
+
+## Symbols vs values
+
+## Simple Quoting
+
+`quote` will return unevaluated data structure
+
+quoting an unbound symbol will return the symbol
+
+single quote is reader macro
+
+## Syntax quoting
+
+uses backtick ``` `(+ 1 2) ```
+
+syntax quoting returns fully qualified symbol
+
+`~` evaulates code in quoted exp
+
+unquote splicing unwraps a sequable data structure
+
+(+ ~@(list 1 2 3)) == (+ 1 2 3)
+
+
+
 
