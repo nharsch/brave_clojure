@@ -704,5 +704,31 @@
 (ns-interns *ns*)
 (deref #'clojure-noob.notes/test-var) ; same use `test-var`
 
+; Chapter 7
+(defmacro infix
+  [infixed]
+  (list (second infixed) (first infixed) (last infixed)))
+
+
+; Chapter 8
+(macroexpand '(when true 1 0))
+
+(macroexpand '(infix (1 + 1)))
+; this is what is evaluated: (+ 1 1)
+
+(quote (+ 1 2))
+; => (+ 1 2)
+
+; quoting unbound symbol will return the symbol
+
+(quote some-unbound-symbol)
+
+`(+ 1 2)
+
+'(+ 1 ~(inc 2))
+
+; unquote splicing unwraps sequable data structure
+`(+ ~@(list 1 2 3))
+
 
 

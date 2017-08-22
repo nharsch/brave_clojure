@@ -43,7 +43,7 @@
 ; radial body symmetry
 ;; (defn matching-part
 ;;   "return a map with left replaced with right"
-;;   [part]   
+;;   [part]
 ;;   {:name (clojure.string/replace (:name part) #"^left-" "right-")
 ;;
 ;;   :size (:size part)})
@@ -57,7 +57,7 @@
 
 (n_list 2 {:name "hand"})
 
-(defn radial-symmetrize-body-parts 
+(defn radial-symmetrize-body-parts
   [radial-factor asym-body-parts]
   (reduce (fn [final-body-parts part]
             (into final-body-parts (* radial-factor part)))))
