@@ -200,6 +200,18 @@ you can also give `refer` optional filters `:only`, `:exclude` and `:rename`
 (clojure.core/refer 'cheese.taxonomy :only ['bries])
 
 
+# Chapter 7 - Macros
+
+## Read and Eval
+
+Read - convert texutal code into data structure
+
+Eval - Traverse the data structures and perform actions like
+function application or var lookup
+
+
+
+
 # Chapter 8
 
 `when` is not a special form, but a macro defined with `if` and `do`
