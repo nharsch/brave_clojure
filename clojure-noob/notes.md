@@ -201,6 +201,18 @@ you can also give `refer` optional filters `:only`, `:exclude` and `:rename`
 
 
 # Chapter 7 - Macros
+[code notes](./src/clojure_noob/ch07.clj)
+
+Clojure evaluation:
+
+read text --> create data structures --> evaluate those data structures
+
+compilers construct Abstract Syntax Trees (ASTs)
+
+
+Clojure evaluates list structures
+
+Lists are ideal for trees
 
 ## Read and Eval
 
@@ -209,6 +221,35 @@ Read - convert texutal code into data structure
 Eval - Traverse the data structures and perform actions like
 function application or var lookup
 
+## Reader Macros
+
+reader macros are sets of rules for transforming text into data structures
+
+`quote` yields an unevaluted form
+
+## The Evaluator
+
+a function that takes a data structure as an arg
+
+### symbols
+
+create abstractions by associating names with vals
+
+symbols resolves to either a **value** or **special form**
+
+### lists
+
+if the data structure is an empty list, it evaluates to an empty list
+
+otherwise, it's evaluates as a _call_ tot he first element in the list
+
+## Macros
+
+allow you to manipulate data between `read` and `eval`
+
+macro evaluation is called *Macro Expansion*
+
+### `->` Macro
 
 
 
